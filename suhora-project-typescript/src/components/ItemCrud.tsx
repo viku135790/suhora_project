@@ -14,6 +14,7 @@ const ItemCrud: React.FC = () => {
   const dispatch = useDispatch();
   const [addText, setAddText] = useState('');
   const currentAutherName = username || '';
+  const [activeTab, setActiveTab] = useState<number>(1);
 
   // submit new data
   const handleSubmitData = (e: SyntheticEvent) => {
@@ -62,61 +63,77 @@ const ItemCrud: React.FC = () => {
   };
 
   return (
-    <div className='h-full w-full overflow-y-auto p-2 flex flex-col md:justify-around md:flex-row gap-3'>
-      <div className='md:w-[40%] w-full flex flex-col gap-3'>
-        <form className='w-full flex' onSubmit={handleSubmitData}>
-          <input
-            type="text"
-            className='h-14 w-full outline-none indent-2 placeholder:text-cyan-600 placeholder:font-bold'
-            placeholder='Enter new text here'
-            onChange={(e) => setAddText(e.target.value)}
-          />
-          <button className='w-24 h-14 bg-blue-700 font-semibold text-white hover:bg-blue-600 duration-300'>Submit</button>
-        </form>
-        <div className='flex flex-col gap-2'>
-          {data.map((item, index) => (
-            <div key={index} className='w-full gap-2 bg-white text-black flex flex-col rounded-md h-auto p-2'>
-              <div className='flex justify-between'>
-                <p className='text-gray-700 font-bold'>{item.autherName}</p>
-                <div className='flex gap-2'>
-                  <button className='text-sm border border-solid border-blue-700 px-1 font-semibold text-blue-700 hover:text-white hover:bg-blue-700 duration-300' onClick={() => setEditingItemIndex(item.id)}>Edit</button>
-                  <button className='text-sm border border-solid border-green-700 px-1 font-semibold text-green-700 hover:text-white hover:bg-green-700 duration-300' onClick={() => handleUpdateData(item.id)}>Submit</button>
-                  <button className='text-sm border border-solid border-red-700 px-1 font-semibold text-red-700 hover:text-white hover:bg-red-700 duration-300' onClick={() => handleDeleteData(item.id)}>Delete</button>
-                </div>
-              </div>
-              <textarea className='text-gray-700 border outline-none h-auto' rows={4} cols={1} required disabled={editingItemIndex === item.id ? false : true} onChange={(e) => setNewText(e.target.value)}>{item.text}</textarea>
-            </div>
-          ))}
-        </div>
+    <div className="h-full w-full overflow-y-auto p-2 flex flex-col gap-3">
+      <div className="flex">
+        <button
+          onClick={() => setActiveTab(1)}
+          className={`w-20 border font-semibold ${activeTab === 1 ? 'bg-white text-purple-700' : 'text-white'}`}
+        >
+          CRUD
+        </button>
+        <button
+          onClick={() => setActiveTab(2)}
+          className={`w-20 border font-semibold ${activeTab === 2 ? 'bg-white text-purple-700' : 'text-white'}`}
+        >
+          SEARCH
+        </button>
       </div>
-
-      <div className='md:w-[40%] w-full h-auto flex flex-col gap-3'>
-        <form className='w-full flex' onSubmit={handleSearchByAuthor}>
-          <input
-            type="text"
-            className='h-14 w-full outline-none indent-2 placeholder:text-cyan-600 placeholder:font-bold'
-            required
-            onChange={(e) => setAuthorName(e.target.value)}
-            placeholder='Enter author name here'
-          />
-          <button className='w-24 h-14 bg-blue-700 font-semibold text-white hover:bg-blue-600 duration-300'>Search</button>
-        </form>
-        <div className='flex flex-col gap-2'>
-          {searchData.map((item, index) => (
-            <div key={index} className='w-full gap-2 bg-white text-black flex flex-col rounded-md h-auto p-2'>
-              <div className='flex justify-between'>
-                <p className='text-gray-700 font-bold'>{item.autherName}</p>
-                <div className='flex gap-2'>
-                  {/* <button className='text-sm border border-solid border-blue-700 px-1 font-semibold text-blue-700 hover:text-white hover:bg-blue-700 duration-300' onClick={() => setEditingItemIndex(item.id)}>Edit</button>
+      {activeTab === 1 ? (
+        <div className='md:w-[40%] w-full flex flex-col gap-3'>
+          <form className='w-full flex' onSubmit={handleSubmitData}>
+            <input
+              type="text"
+              className='h-14 w-full outline-none indent-2 placeholder:text-cyan-600 placeholder:font-bold'
+              placeholder='Enter new text here'
+              onChange={(e) => setAddText(e.target.value)}
+            />
+            <button className='w-24 h-14 bg-blue-700 font-semibold text-white hover:bg-blue-600 duration-300'>Submit</button>
+          </form>
+          <div className='flex flex-col gap-2'>
+            {data.map((item, index) => (
+              <div key={index} className='w-full gap-2 bg-white text-black flex flex-col rounded-md h-auto p-2'>
+                <div className='flex justify-between'>
+                  <p className='text-gray-700 font-bold'>{item.autherName}</p>
+                  <div className='flex gap-2'>
+                    <button className='text-sm border border-solid border-blue-700 px-1 font-semibold text-blue-700 hover:text-white hover:bg-blue-700 duration-300' onClick={() => setEditingItemIndex(item.id)}>Edit</button>
+                    <button className='text-sm border border-solid border-green-700 px-1 font-semibold text-green-700 hover:text-white hover:bg-green-700 duration-300' onClick={() => handleUpdateData(item.id)}>Submit</button>
+                    <button className='text-sm border border-solid border-red-700 px-1 font-semibold text-red-700 hover:text-white hover:bg-red-700 duration-300' onClick={() => handleDeleteData(item.id)}>Delete</button>
+                  </div>
+                </div>
+                <textarea className='text-gray-700 border outline-none h-auto' rows={4} cols={1} required disabled={editingItemIndex === item.id ? false : true} onChange={(e) => setNewText(e.target.value)}>{item.text}</textarea>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className='md:w-[40%] w-full h-auto flex flex-col gap-3'>
+          <form className='w-full flex' onSubmit={handleSearchByAuthor}>
+            <input
+              type="text"
+              className='h-14 w-full outline-none indent-2 placeholder:text-cyan-600 placeholder:font-bold'
+              required
+              onChange={(e) => setAuthorName(e.target.value)}
+              placeholder='Enter author name here'
+            />
+            <button className='w-24 h-14 bg-blue-700 font-semibold text-white hover:bg-blue-600 duration-300'>Search</button>
+          </form>
+          <div className='flex flex-col gap-2'>
+            {searchData.map((item, index) => (
+              <div key={index} className='w-full gap-2 bg-white text-black flex flex-col rounded-md h-auto p-2'>
+                <div className='flex justify-between'>
+                  <p className='text-gray-700 font-bold'>{item.autherName}</p>
+                  <div className='flex gap-2'>
+                    {/* <button className='text-sm border border-solid border-blue-700 px-1 font-semibold text-blue-700 hover:text-white hover:bg-blue-700 duration-300' onClick={() => setEditingItemIndex(item.id)}>Edit</button>
                   <button className='text-sm border border-solid border-green-700 px-1 font-semibold text-green-700 hover:text-white hover:bg-green-700 duration-300' onClick={() => handleUpdateData(item.id)}>Submit</button>
                   <button className='text-sm border border-solid border-red-700 px-1 font-semibold text-red-700 hover:text-white hover:bg-red-700 duration-300' onClick={() => handleDeleteData(item.id)}>Delete</button> */}
+                  </div>
                 </div>
+                <textarea className='text-gray-700 border outline-none h-auto' rows={4} cols={1} required disabled={editingItemIndex === item.id ? false : true} onChange={(e) => setNewText(e.target.value)}>{item.text}</textarea>
               </div>
-              <textarea className='text-gray-700 border outline-none h-auto' rows={4} cols={1} required disabled={editingItemIndex === item.id ? false : true} onChange={(e) => setNewText(e.target.value)}>{item.text}</textarea>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

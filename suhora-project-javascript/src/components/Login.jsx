@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login } from "../features/authSlice";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate()
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+
 
   const submitForm = (e) => {
     e.preventDefault();
     if (email && password) {
       dispatch(login({ email, password }))
+      navigate('/dashboard');
     }
     else {
       toast.info('Something went wrong')
@@ -60,16 +62,9 @@ const Login = () => {
           </div>
         </form>
         <div className='w-full text-center font-sm text-blue-800 '>
-          {
-            isAuthenticated ?
-              (<Link to='/dashboard' className='hover:underline cursor-pointer font-bold text-purple-700'>
-                Go To Dashboard
-              </Link>)
-              :
-              (<Link to='/signup' className='hover:underline cursor-pointer'>
-                Create An Account ?
-              </Link>)
-          }
+          <Link to='/signup' className='hover:underline cursor-pointer'>
+            Create An Account ?
+          </Link>
         </div>
       </div>
     </div>
